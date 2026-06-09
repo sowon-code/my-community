@@ -101,6 +101,9 @@ export default function PostDetail() {
         <div className={styles.headerInner}>
           <Link to="/posts" className={styles.backBtn}>← 목록으로</Link>
           <span className={styles.logoText}>🐶 Love Dog Community</span>
+          {user && post && user.id === post.author_id && (
+            <Link to={`/posts/${id}/edit`} className={styles.editBtn}>수정하기</Link>
+          )}
         </div>
       </header>
 
