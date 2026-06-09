@@ -76,10 +76,10 @@ export default function PostList() {
       {/* 헤더 */}
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <div className={styles.logo}>
+          <Link to="/posts" className={styles.logo}>
             <span className={styles.logoIcon}>🐶</span>
             <span className={styles.logoText}>Love Dog Community</span>
-          </div>
+          </Link>
           <div className={styles.headerRight}>
             {profile && (
               <span className={styles.welcome}>

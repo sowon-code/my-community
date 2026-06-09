@@ -136,7 +136,7 @@ export default function PostDetail() {
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <Link to="/posts" className={styles.backBtn}>← 목록으로</Link>
-          <span className={styles.logoText}>🐶 Love Dog Community</span>
+          <Link to="/posts" className={styles.logoText}>🐶 Love Dog Community</Link>
           {isOwner && (
             <div className={styles.authorActions}>
               {confirmDelete ? (
