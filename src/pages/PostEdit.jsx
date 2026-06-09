@@ -21,8 +21,9 @@ export default function PostEdit() {
 
   useEffect(() => {
     const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { navigate('/'); return }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) { navigate('/'); return }
+      const uid = session.user.id
 
       const { data: post } = await supabase
         .from('posts')
@@ -31,7 +32,7 @@ export default function PostEdit() {
         .single()
 
       if (!post) { navigate('/posts'); return }
-      if (String(post.author_id) !== String(user.id)) { navigate(`/posts/${id}`); return }
+      if (String(post.author_id).trim() !== String(uid).trim()) { navigate(`/posts/${id}`); return }
 
       setTitle(post.title)
       setContent(post.content)

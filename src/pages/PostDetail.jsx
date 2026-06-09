@@ -20,10 +20,11 @@ export default function PostDetail() {
 
   useEffect(() => {
     const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { navigate('/'); return }
-      setUserId(user.id)
-      await fetchPost(user.id)
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) { navigate('/'); return }
+      const uid = session.user.id
+      setUserId(uid)
+      await fetchPost(uid)
       await fetchComments()
     }
     init()
@@ -32,12 +33,13 @@ export default function PostDetail() {
   const fetchPost = async (uid) => {
     const { data } = await supabase
       .from('posts')
-      .select(`*, author:profiles(nickname)`)
+      .select(`id, title, content, category, image_url, hashtags, created_at, author_id, author:profiles(nickname)`)
       .eq('id', id)
       .single()
     if (!data) { navigate('/posts'); return }
     setPost(data)
-    setIsOwner(data.author_id === uid)
+    const owner = String(data.author_id).trim() === String(uid).trim()
+    setIsOwner(owner)
 
     const { count } = await supabase
       .from('likes')

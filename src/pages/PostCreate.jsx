@@ -19,9 +19,9 @@ export default function PostCreate() {
   const [imgLoading, setImgLoading] = useState(false)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (!user) navigate('/')
-      setUser(user)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session?.user) navigate('/')
+      setUser(session?.user ?? null)
     })
   }, [])
 

@@ -22,8 +22,9 @@ export default function PostList() {
 
   useEffect(() => {
     const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { navigate('/'); return }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) { navigate('/'); return }
+      const user = session.user
       setUser(user)
       const { data: prof } = await supabase
         .from('profiles')
