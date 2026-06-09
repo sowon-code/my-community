@@ -18,6 +18,11 @@ export default function PostDetail() {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
+  // 댓글 수정/삭제 상태
+  const [editingCommentId, setEditingCommentId] = useState(null)
+  const [editingText, setEditingText] = useState('')
+  const [deletingCommentId, setDeletingCommentId] = useState(null)
+
   useEffect(() => {
     const init = async () => {
       const { data: { session } } = await supabase.auth.getSession()
@@ -38,8 +43,7 @@ export default function PostDetail() {
       .single()
     if (!data) { navigate('/posts'); return }
     setPost(data)
-    const owner = String(data.author_id).trim() === String(uid).trim()
-    setIsOwner(owner)
+    setIsOwner(String(data.author_id).trim() === String(uid).trim())
 
     const { count } = await supabase
       .from('likes')
@@ -60,7 +64,7 @@ export default function PostDetail() {
   const fetchComments = async () => {
     const { data } = await supabase
       .from('comments')
-      .select(`*, author:profiles(nickname)`)
+      .select(`id, content, created_at, author_id, author:profiles(nickname)`)
       .eq('post_id', id)
       .order('created_at', { ascending: true })
     setComments(data || [])
@@ -93,7 +97,27 @@ export default function PostDetail() {
     setSubmitting(false)
   }
 
-  const handleDelete = async () => {
+  const handleCommentEditStart = (c) => {
+    setEditingCommentId(c.id)
+    setEditingText(c.content)
+    setDeletingCommentId(null)
+  }
+
+  const handleCommentEditSave = async (commentId) => {
+    if (!editingText.trim()) return
+    await supabase.from('comments').update({ content: editingText.trim() }).eq('id', commentId)
+    setEditingCommentId(null)
+    setEditingText('')
+    await fetchComments()
+  }
+
+  const handleCommentDelete = async (commentId) => {
+    await supabase.from('comments').delete().eq('id', commentId)
+    setDeletingCommentId(null)
+    await fetchComments()
+  }
+
+  const handleDeletePost = async () => {
     setDeleting(true)
     await supabase.from('posts').delete().eq('id', id)
     navigate('/posts')
@@ -118,7 +142,7 @@ export default function PostDetail() {
               {confirmDelete ? (
                 <>
                   <span className={styles.confirmText}>정말 삭제할까요?</span>
-                  <button className={styles.deleteConfirmBtn} onClick={handleDelete} disabled={deleting}>
+                  <button className={styles.deleteConfirmBtn} onClick={handleDeletePost} disabled={deleting}>
                     {deleting ? '삭제 중...' : '삭제'}
                   </button>
                   <button className={styles.cancelBtn} onClick={() => setConfirmDelete(false)}>취소</button>
@@ -154,7 +178,6 @@ export default function PostDetail() {
               ))}
             </div>
           )}
-
           <div className={styles.likeRow}>
             <button
               className={`${styles.likeBtn} ${liked ? styles.liked : ''}`}
@@ -185,15 +208,56 @@ export default function PostDetail() {
             {comments.length === 0 ? (
               <p className={styles.noComment}>첫 번째 댓글을 남겨보세요! 🐕</p>
             ) : (
-              comments.map((c) => (
-                <div key={c.id} className={styles.commentItem}>
-                  <div className={styles.commentHeader}>
-                    <span className={styles.commentAuthor}>🐾 {c.author?.nickname}</span>
-                    <span className={styles.commentDate}>{formatDate(c.created_at)}</span>
+              comments.map((c) => {
+                const isMine = String(c.author_id).trim() === String(userId).trim()
+                const isEditing = editingCommentId === c.id
+                const isConfirmingDelete = deletingCommentId === c.id
+
+                return (
+                  <div key={c.id} className={styles.commentItem}>
+                    <div className={styles.commentHeader}>
+                      <span className={styles.commentAuthor}>🐾 {c.author?.nickname}</span>
+                      <div className={styles.commentMeta}>
+                        <span className={styles.commentDate}>{formatDate(c.created_at)}</span>
+                        {isMine && !isEditing && (
+                          <div className={styles.commentActions}>
+                            {isConfirmingDelete ? (
+                              <>
+                                <span className={styles.commentConfirmText}>삭제할까요?</span>
+                                <button className={styles.commentDeleteConfirm} onClick={() => handleCommentDelete(c.id)}>삭제</button>
+                                <button className={styles.commentCancel} onClick={() => setDeletingCommentId(null)}>취소</button>
+                              </>
+                            ) : (
+                              <>
+                                <button className={styles.commentEditBtn} onClick={() => handleCommentEditStart(c)}>수정</button>
+                                <button className={styles.commentDeleteBtn} onClick={() => { setDeletingCommentId(c.id); setEditingCommentId(null) }}>삭제</button>
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {isEditing ? (
+                      <div className={styles.editForm}>
+                        <textarea
+                          className={`input-field ${styles.editInput}`}
+                          value={editingText}
+                          onChange={(e) => setEditingText(e.target.value)}
+                          rows={3}
+                          autoFocus
+                        />
+                        <div className={styles.editBtns}>
+                          <button className="btn-primary" style={{ fontSize: '0.85rem', padding: '8px 18px' }} onClick={() => handleCommentEditSave(c.id)} disabled={!editingText.trim()}>저장</button>
+                          <button className={styles.commentCancel} onClick={() => setEditingCommentId(null)}>취소</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className={styles.commentContent}>{c.content}</p>
+                    )}
                   </div>
-                  <p className={styles.commentContent}>{c.content}</p>
-                </div>
-              ))
+                )
+              })
             )}
           </div>
         </section>
