@@ -31,7 +31,7 @@ export default function PostEdit() {
         .single()
 
       if (!post) { navigate('/posts'); return }
-      if (post.author_id !== user.id) { navigate(`/posts/${id}`); return }
+      if (String(post.author_id) !== String(user.id)) { navigate(`/posts/${id}`); return }
 
       setTitle(post.title)
       setContent(post.content)

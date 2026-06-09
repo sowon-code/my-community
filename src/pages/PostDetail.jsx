@@ -6,8 +6,9 @@ import styles from './PostDetail.module.css'
 export default function PostDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const [userId, setUserId] = useState(null)
   const [post, setPost] = useState(null)
+  const [isOwner, setIsOwner] = useState(false)
   const [comments, setComments] = useState([])
   const [liked, setLiked] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
@@ -21,14 +22,14 @@ export default function PostDetail() {
     const init = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { navigate('/'); return }
-      setUser(user)
+      setUserId(user.id)
       await fetchPost(user.id)
       await fetchComments()
     }
     init()
   }, [id])
 
-  const fetchPost = async (userId) => {
+  const fetchPost = async (uid) => {
     const { data } = await supabase
       .from('posts')
       .select(`*, author:profiles(nickname)`)
@@ -36,6 +37,7 @@ export default function PostDetail() {
       .single()
     if (!data) { navigate('/posts'); return }
     setPost(data)
+    setIsOwner(data.author_id === uid)
 
     const { count } = await supabase
       .from('likes')
@@ -47,7 +49,7 @@ export default function PostDetail() {
       .from('likes')
       .select('id')
       .eq('post_id', id)
-      .eq('user_id', userId)
+      .eq('user_id', uid)
       .maybeSingle()
     setLiked(!!myLike)
     setLoading(false)
@@ -63,13 +65,13 @@ export default function PostDetail() {
   }
 
   const handleLike = async () => {
-    if (!user) return
+    if (!userId) return
     if (liked) {
-      await supabase.from('likes').delete().eq('post_id', id).eq('user_id', user.id)
+      await supabase.from('likes').delete().eq('post_id', id).eq('user_id', userId)
       setLiked(false)
       setLikeCount((c) => c - 1)
     } else {
-      await supabase.from('likes').insert({ post_id: id, user_id: user.id })
+      await supabase.from('likes').insert({ post_id: id, user_id: userId })
       setLiked(true)
       setLikeCount((c) => c + 1)
     }
@@ -82,7 +84,7 @@ export default function PostDetail() {
     await supabase.from('comments').insert({
       content: commentText.trim(),
       post_id: id,
-      author_id: user.id,
+      author_id: userId,
     })
     setCommentText('')
     await fetchComments()
@@ -109,7 +111,7 @@ export default function PostDetail() {
         <div className={styles.headerInner}>
           <Link to="/posts" className={styles.backBtn}>← 목록으로</Link>
           <span className={styles.logoText}>🐶 Love Dog Community</span>
-          {user && post && user.id === post.author_id && (
+          {isOwner && (
             <div className={styles.authorActions}>
               {confirmDelete ? (
                 <>
@@ -131,7 +133,6 @@ export default function PostDetail() {
       </header>
 
       <main className={styles.main}>
-        {/* 게시물 */}
         <article className={`card ${styles.article}`}>
           <div className={styles.postCat}>{post.category}</div>
           <h1 className={styles.postTitle}>{post.title}</h1>
@@ -152,7 +153,6 @@ export default function PostDetail() {
             </div>
           )}
 
-          {/* 좋아요 버튼 */}
           <div className={styles.likeRow}>
             <button
               className={`${styles.likeBtn} ${liked ? styles.liked : ''}`}
@@ -163,7 +163,6 @@ export default function PostDetail() {
           </div>
         </article>
 
-        {/* 댓글 */}
         <section className={`card ${styles.commentSection}`}>
           <h3 className={styles.commentTitle}>댓글 {comments.length}개</h3>
 
