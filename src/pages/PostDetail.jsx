@@ -14,6 +14,8 @@ export default function PostDetail() {
   const [commentText, setCommentText] = useState('')
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     const init = async () => {
@@ -87,6 +89,12 @@ export default function PostDetail() {
     setSubmitting(false)
   }
 
+  const handleDelete = async () => {
+    setDeleting(true)
+    await supabase.from('posts').delete().eq('id', id)
+    navigate('/posts')
+  }
+
   const formatDate = (dateStr) => {
     const d = new Date(dateStr)
     return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
@@ -102,7 +110,22 @@ export default function PostDetail() {
           <Link to="/posts" className={styles.backBtn}>← 목록으로</Link>
           <span className={styles.logoText}>🐶 Love Dog Community</span>
           {user && post && user.id === post.author_id && (
-            <Link to={`/posts/${id}/edit`} className={styles.editBtn}>수정하기</Link>
+            <div className={styles.authorActions}>
+              {confirmDelete ? (
+                <>
+                  <span className={styles.confirmText}>정말 삭제할까요?</span>
+                  <button className={styles.deleteConfirmBtn} onClick={handleDelete} disabled={deleting}>
+                    {deleting ? '삭제 중...' : '삭제'}
+                  </button>
+                  <button className={styles.cancelBtn} onClick={() => setConfirmDelete(false)}>취소</button>
+                </>
+              ) : (
+                <>
+                  <Link to={`/posts/${id}/edit`} className={styles.editBtn}>수정하기</Link>
+                  <button className={styles.deleteBtn} onClick={() => setConfirmDelete(true)}>삭제하기</button>
+                </>
+              )}
+            </div>
           )}
         </div>
       </header>
