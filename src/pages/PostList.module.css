@@ -1,0 +1,207 @@
+.page {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.header {
+  background: white;
+  border-bottom: 2px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.headerInner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logoIcon {
+  font-size: 28px;
+}
+
+.logoText {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.welcome {
+  font-size: 0.88rem;
+  color: var(--color-text-light);
+}
+
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.banner {
+  background: linear-gradient(135deg, #FFD6E0, #FFECD2);
+  border-radius: 16px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.bannerText {
+  font-size: 0.95rem;
+  color: #E07A9A;
+  font-weight: 600;
+}
+
+.categories {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.catBtn {
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 2px solid var(--color-border);
+  background: white;
+  color: var(--color-text-light);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.catBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+.catActive {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.postCount {
+  font-size: 0.88rem;
+  color: var(--color-text-light);
+}
+
+.createBtn {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+}
+
+.loading, .empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-text-light);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.empty span {
+  font-size: 48px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.postCard {
+  display: block;
+  background: white;
+  border-radius: 16px;
+  padding: 20px 24px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 2px 12px rgba(255, 158, 181, 0.12);
+  transition: all 0.2s;
+}
+
+.postCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 24px rgba(255, 158, 181, 0.25);
+  border-color: var(--color-primary-light);
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.postCat {
+  font-size: 0.8rem;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-weight: 600;
+}
+
+.postDate {
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+}
+
+.postTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.postContent {
+  font-size: 0.88rem;
+  color: var(--color-text-light);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.postFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.postAuthor {
+  font-size: 0.82rem;
+  color: var(--color-text-light);
+}
+
+.postStats {
+  display: flex;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: var(--color-text-light);
+}

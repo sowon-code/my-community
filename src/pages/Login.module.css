@@ -1,0 +1,92 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #FFF0F5 0%, #FFF8F0 100%);
+}
+
+.card {
+  background: white;
+  border-radius: 24px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 40px rgba(255, 158, 181, 0.25);
+  border: 1px solid #FFE0EA;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.dogIcon {
+  font-size: 64px;
+  margin-bottom: 12px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.siteName {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #E07A9A;
+  margin-bottom: 6px;
+}
+
+.siteDesc {
+  font-size: 0.85rem;
+  color: #9B7080;
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #5C3D4A;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #5C3D4A;
+}
+
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: #9B7080;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.link {
+  color: #E07A9A;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
