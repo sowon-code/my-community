@@ -127,23 +127,34 @@ export default function PostList() {
             <p>아직 게시물이 없어요. 첫 번째 글을 작성해보세요!</p>
           </div>
         ) : (
-          <div className={styles.list}>
+          <div className={styles.grid}>
             {posts.map((post) => (
               <Link to={`/posts/${post.id}`} key={post.id} className={styles.postCard}>
-                <div className={styles.postMeta}>
+                {/* 썸네일 */}
+                <div className={styles.thumbnail}>
+                  {post.image_url ? (
+                    <img src={post.image_url} alt={post.title} className={styles.thumbImg} />
+                  ) : (
+                    <div className={styles.thumbPlaceholder}>🐶</div>
+                  )}
                   <span className={styles.postCat}>
                     {CATEGORY_EMOJI[post.category]} {post.category}
                   </span>
-                  <span className={styles.postDate}>{formatDate(post.created_at)}</span>
                 </div>
-                <h3 className={styles.postTitle}>{post.title}</h3>
-                <p className={styles.postContent}>{post.content.slice(0, 80)}{post.content.length > 80 ? '...' : ''}</p>
-                <div className={styles.postFooter}>
-                  <span className={styles.postAuthor}>🐾 {post.author?.nickname}</span>
-                  <div className={styles.postStats}>
-                    <span>💬 {post.comments?.[0]?.count ?? 0}</span>
-                    <span>❤️ {post.likes?.[0]?.count ?? 0}</span>
+                {/* 카드 내용 */}
+                <div className={styles.cardBody}>
+                  <h3 className={styles.postTitle}>{post.title}</h3>
+                  <p className={styles.postContent}>
+                    {post.content.slice(0, 60)}{post.content.length > 60 ? '...' : ''}
+                  </p>
+                  <div className={styles.postFooter}>
+                    <span className={styles.postAuthor}>🐾 {post.author?.nickname}</span>
+                    <div className={styles.postStats}>
+                      <span>💬 {post.comments?.[0]?.count ?? 0}</span>
+                      <span>❤️ {post.likes?.[0]?.count ?? 0}</span>
+                    </div>
                   </div>
+                  <span className={styles.postDate}>{formatDate(post.created_at)}</span>
                 </div>
               </Link>
             ))}

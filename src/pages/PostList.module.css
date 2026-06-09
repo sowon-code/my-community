@@ -131,77 +131,129 @@
   font-size: 48px;
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+@media (max-width: 540px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .postCard {
-  display: block;
+  display: flex;
+  flex-direction: column;
   background: white;
-  border-radius: 16px;
-  padding: 20px 24px;
+  border-radius: 18px;
   border: 1px solid var(--color-border);
   box-shadow: 0 2px 12px rgba(255, 158, 181, 0.12);
+  overflow: hidden;
   transition: all 0.2s;
 }
 
 .postCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 24px rgba(255, 158, 181, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(255, 158, 181, 0.28);
   border-color: var(--color-primary-light);
 }
 
-.postMeta {
+/* 썸네일 영역 */
+.thumbnail {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #FFD6E0, #FFECD2);
+  flex-shrink: 0;
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.postCard:hover .thumbImg {
+  transform: scale(1.05);
+}
+
+.thumbPlaceholder {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
+  justify-content: center;
+  font-size: 56px;
 }
 
 .postCat {
-  font-size: 0.8rem;
-  background: var(--color-primary-light);
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.92);
   color: var(--color-primary-dark);
   padding: 3px 10px;
   border-radius: 50px;
-  font-weight: 600;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
 }
 
-.postDate {
-  font-size: 0.8rem;
-  color: var(--color-text-light);
+/* 카드 본문 */
+.cardBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
 }
 
 .postTitle {
-  font-size: 1.05rem;
+  font-size: 0.97rem;
   font-weight: 700;
   color: var(--color-text);
-  margin-bottom: 6px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .postContent {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   color: var(--color-text-light);
   line-height: 1.5;
-  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .postFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 4px;
 }
 
 .postAuthor {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--color-text-light);
 }
 
 .postStats {
   display: flex;
-  gap: 12px;
-  font-size: 0.82rem;
+  gap: 8px;
+  font-size: 0.78rem;
+  color: var(--color-text-light);
+}
+
+.postDate {
+  font-size: 0.75rem;
   color: var(--color-text-light);
 }
